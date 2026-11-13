@@ -101,11 +101,14 @@ theme: Chic
 #landscape
 
 # Deployment
-## 已改用 GitHub Actions 构建发布（见 .github/workflows/deploy.yml），
-## main 分支存放源码，不再使用 hexo-deployer-git 强推产物到 main。
-## 若需恢复旧方式，取消下面注释，并注意它会 --force 覆盖 main 分支。
-# deploy:
-#   type: 'git'
-#   repo: 'https://github.com/zhiyue8200/zhiyue8200.github.io.git'
-#   branch: 'gh-pages'
+## 现状：GitHub 账号因账单问题被锁，Actions 无法运行（run 43440817637 启动失败）。
+## 因此默认走「本地构建 + 推送 gh-pages」：main = 源码，gh-pages = 构建产物。
+## 用法：npm run publish            （= hexo clean && hexo generate -d）
+## 若日后账单问题解决，可把 .github/workflows/deploy.yml 恢复启用，
+## 并在 Settings → Pages 把 Source 切回 GitHub Actions。
+deploy:
+  type: 'git'
+  repo: 'git@github.com:zhiyue8200/zhiyue8200.github.io.git'
+  branch: 'gh-pages'
+  ignore_hidden: false   # 让 public/.nojekyll 也被部署（跳过 Jekyll 处理）
 
