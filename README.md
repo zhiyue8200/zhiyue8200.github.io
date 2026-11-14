@@ -8,11 +8,44 @@
 - `gh-pages`：构建产物，由本地 `npm run publish` 推送，GitHub Pages 从这里发布
 - `site-archive`：迁移前 `hexo-deployer-git` 强推的历史快照，仅作备份，可删除
 
-## 为什么不用 GitHub Actions
+## 部署方式（二选一，不要混用）
 
-`.github/workflows/deploy.yml` 已写好（Actions 构建 + `actions/deploy-pages`），但当前账号因账单问题被锁，
-Actions 作业无法启动（报错：`The job was not started because your account is locked due to a billing issue`）。
-账单恢复后可切回该方案：把 Settings → Pages 的 Source 改回 **GitHub Actions** 即可，其他不用动。
+Settings → Pages → Build and deployment 的 Source 决定了谁来构建站点，两种模式互斥：
+
+### 方案 A：`gh-pages` 分支发布（当前采用）
+
+- Source：**Deploy from a branch**
+- Branch：**`gh-pages`**，目录 **`/ (root)`**
+
+`main` 只放源码，产物由本地 `npm run publish` 推到 `gh-pages`。该分支根目录有 `.nojekyll`，
+GitHub Pages 会直接原样发布，不再跑 Jekyll。Actions 不参与构建，`deploy.yml` 保持改名后的
+`deploy.yml.disable`（当前账号因账单被锁，Actions 作业无法启动：
+`The job was not started because your account is locked due to a billing issue`）。
+
+### 方案 B：GitHub Actions 发布（账单恢复后可选）
+
+- Source：**GitHub Actions**
+- 把 `.github/workflows/deploy.yml.disable` 改回 `.github/workflows/deploy.yml` 并提交
+
+之后 push 到 `main` 会自动跑 Hexo 构建，再用 `actions/deploy-pages` 发布，
+这时 `gh-pages` 分支不再需要，也不要让 Source 指回分支。
+
+## 常见报错
+
+### `github-pages 232 | Error: The chic theme could not be found.`
+
+**这不是 Hexo 的报错**，而是 GitHub Pages 内置的 Jekyll 构建在报错：
+日志里的 `github-pages 232` 是 Jekyll 的 `github-pages` gem 版本。
+
+原因：Pages 的 Source 被设成了「Deploy from a branch」并指向 **`main`**。Jekyll 读到 Hexo 的
+`_config.yml`，把 `theme: Chic` 当成一个 Jekyll 主题 gem 去找，自然找不到。
+
+修复：
+
+- 继续用 `gh-pages`：按「方案 A」把 Source 分支改为 **`gh-pages`**（根目录的 `.nojekyll` 会让 Jekyll 跳过）；
+- 或改用 Actions：按「方案 B」把 Source 改成 **GitHub Actions** 并恢复 workflow。
+
+验证 `gh-pages` 内容：`git ls-tree origin/gh-pages .nojekyll` 应当能查到文件。
 
 ## 在新机器上拉取并写作
 
