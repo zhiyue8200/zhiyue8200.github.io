@@ -157,14 +157,12 @@
 
         <div class="post-content">
             <p><strong>## 在新机器上拉取并写作</strong></p>
-<p>`&#96;&#96;bash</p>
+<p>`&#96;&#96;</p>
 <p># 只拉源码分支（gh-pages 是产物，不需要 checkout）</p>
-<p>git clone -b main –single-branch <a href="mailto:&#x67;&#x69;&#116;&#64;&#x67;&#x69;&#x74;&#x68;&#x75;&#98;&#x2e;&#x63;&#x6f;&#x6d;">&#x67;&#x69;&#116;&#64;&#x67;&#x69;&#x74;&#x68;&#x75;&#98;&#x2e;&#x63;&#x6f;&#x6d;</a>:zhiyue8200&#x2F;zhiyue8200.github.io.git</p>
+<p>git clone -b main –single-branch <a href="mailto:&#x67;&#x69;&#116;&#64;&#x67;&#105;&#x74;&#x68;&#x75;&#x62;&#x2e;&#99;&#x6f;&#109;">&#x67;&#x69;&#116;&#64;&#x67;&#105;&#x74;&#x68;&#x75;&#x62;&#x2e;&#99;&#x6f;&#109;</a>:zhiyue8200&#x2F;zhiyue8200.github.io.git</p>
 <p>cd zhiyue8200.github.io</p>
-<p>npm ci            # .npmrc 已指定 npmmirror 源</p>
-<p>npx hexo new post “标题”</p>
-<p>npm run server        # 预览</p>
-<p>npm run publish        # 发布产物到 gh-pages</p>
+<p># npm方式<br>npm ci            # .npmrc 已指定 npmmirror 源<br>npx hexo new post “标题”<br>npm run server        # 预览<br>npm run publish        # 发布产物到 gh-pages</p>
+<p># hexo方式<br>hexo g<br>hexo s<br>hexo d</p>
 <p>git add -A &amp;&amp; git commit -m “post: 标题” &amp;&amp; git push</p>
 <p>`&#96;&#96;</p>
 
