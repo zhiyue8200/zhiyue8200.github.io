@@ -127,6 +127,71 @@
                 <div class="container">
     
     
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
 
     
     <article class="post-wrap">
@@ -156,16 +221,7 @@
         </header>
 
         <div class="post-content">
-            <p><strong>## 在新机器上拉取并写作</strong></p>
-<p>`&#96;&#96;</p>
-<p># 只拉源码分支（gh-pages 是产物，不需要 checkout）</p>
-<p>git clone -b main –single-branch <a href="mailto:&#x67;&#x69;&#116;&#64;&#x67;&#105;&#x74;&#x68;&#x75;&#x62;&#x2e;&#99;&#x6f;&#109;">&#x67;&#x69;&#116;&#64;&#x67;&#105;&#x74;&#x68;&#x75;&#x62;&#x2e;&#99;&#x6f;&#109;</a>:zhiyue8200&#x2F;zhiyue8200.github.io.git</p>
-<p>cd zhiyue8200.github.io</p>
-<p># npm方式<br>npm ci            # .npmrc 已指定 npmmirror 源<br>npx hexo new post “标题”<br>npm run server        # 预览<br>npm run publish        # 发布产物到 gh-pages</p>
-<p># hexo方式<br>hexo g<br>hexo s<br>hexo d</p>
-<p>git add -A &amp;&amp; git commit -m “post: 标题” &amp;&amp; git push</p>
-<p>`&#96;&#96;</p>
-
+            <h3 id="在新机器上拉取并写作"><a href="#在新机器上拉取并写作" class="headerlink" title="在新机器上拉取并写作"></a>在新机器上拉取并写作</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只拉源码分支（gh-pages 是产物，不需要 checkout）</span></span><br><span class="line"></span><br><span class="line">git <span class="built_in">clone</span> -b main --single-branch git@github.com:zhiyue8200/zhiyue8200.github.io.git</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> zhiyue8200.github.io</span><br><span class="line"></span><br><span class="line"><span class="comment"># npm方式</span></span><br><span class="line">npm ci            <span class="comment"># .npmrc 已指定 npmmirror 源</span></span><br><span class="line">npx hexo new post <span class="string">&quot;标题&quot;</span></span><br><span class="line">npm run server        <span class="comment"># 预览</span></span><br><span class="line">npm run publish        <span class="comment"># 发布产物到 gh-pages</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># hexo方式</span></span><br><span class="line">hexo g</span><br><span class="line">hexo s</span><br><span class="line">hexo d</span><br><span class="line"></span><br><span class="line">git add -A &amp;&amp; git commit -m <span class="string">&quot;post: 标题&quot;</span> &amp;&amp; git push</span><br><span class="line"></span><br></pre></td></tr></table></figure>
         </div>
 
         
