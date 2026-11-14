@@ -14,6 +14,24 @@
 Actions 作业无法启动（报错：`The job was not started because your account is locked due to a billing issue`）。
 账单恢复后可切回该方案：把 Settings → Pages 的 Source 改回 **GitHub Actions** 即可，其他不用动。
 
+## 在新机器上拉取并写作
+
+```bash
+# 只拉源码分支（gh-pages 是产物，不需要 checkout）
+git clone -b main --single-branch git@github.com:zhiyue8200/zhiyue8200.github.io.git
+cd zhiyue8200.github.io
+npm ci                       # .npmrc 已指定 npmmirror 源
+npx hexo new post "标题"
+npm run server               # 预览
+npm run publish              # 发布产物到 gh-pages
+git add -A && git commit -m "post: 标题" && git push
+```
+
+前置条件：
+
+- 该机器已把公钥加到 GitHub（推送走 SSH，勿用 HTTPS，国内 `github.com:443` 常常不通）
+- 有 Node 18+（本地用户级安装即可：`~/.local/node`）
+
 ## 本地预览
 
 ```bash
@@ -39,3 +57,5 @@ git add -A && git commit -m "post: xxx" && git push   # 源码同步到 main
 - `.nojekyll` 由 `scripts/nojekyll.js` 在 `generateAfter` 事件里生成；不要改成 `after_generate` 过滤器（那时 public 目录还不存在）
 - 主题 `themes/Chic` 已从嵌套 git 仓库改为普通目录（原仓库 `Siricee/hexo-theme-Chic`），升级主题需手动比对
 - `public/`、`db.json`、`node_modules/`、`.deploy_git/` 均被忽略
+- `.gitattributes` 统一为 LF，避免 Windows 侧 checkout 产生整文件 CRLF 差异
+- 每次 `npm run publish` 都是对 `gh-pages` 的强推（`--force`），换机器后 `gh-pages` 历史会重新开始；产物分支无需保留历史
